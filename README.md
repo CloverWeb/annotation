@@ -4,23 +4,44 @@
 
 例如：
 
-在使用之前需要先注册
+>在使用之前需要先创建一个标签类
 
-    Annotation::register("标签的名字" , "标签的实体类 Label::class");
----
+    class ContainerLabel {
+        public $value;
+        public $param;
+    
+        public function __construct($value , $param) {
+            $this->value = $value;
+            $this->param = $param;
+        }
+    }
+    
+-------
+
+>然后开始注册
+
+--------
+
+    Annotation::register("标签的名字 Container" , "标签的实体类 Label::class");
+    
+--------
+
     /**
-     * @Container('className' , params="lalala")
+     * @Container('className' , param="lalala")
      */
      class Name {
         
      }
 -----
-然后你可以这样读读取他
+>然后你可以这样读读取它
 
     $reflectionClass = new ReflectionClass(Name::class);
-    $reflectionAnnotationClass = new ReflectionAnnotationClass();
+    $reflectionAnnotationClass = new ReflectionAnnotationClass($reflectionClass);
     $label = $reflectionAnnotationClass->getAnnotation("Container")
     
-    echo $label->params;
+    echo $label->param;
     
     输出 lalala
+-------
+
+>还有更多功能有待开发，等等我想睡觉
