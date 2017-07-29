@@ -20,7 +20,7 @@ class ReflectionAnnotationProperty extends ReflectionAnnotation {
 
 
     /**
-     * 获取class的注释标签
+     * 获取属性的注释标签
      * 比如获取 AnnotationClass类的注释标签@Name: AnnotationClass::getAnnotation('Name')
      * @param $name
      * @return object

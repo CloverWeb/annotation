@@ -69,7 +69,7 @@ class ReflectionAnnotationClass extends ReflectionAnnotation {
     }
 
     /**
-     * @return array
+     * @return ReflectionAnnotationProperty[]
      */
     public function getProperties() {
         $properties = [];
