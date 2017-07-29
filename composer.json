@@ -2,7 +2,7 @@
   "name": "joking/annotation",
   "description": "注释拓展",
   "minimum-stability": "stable",
-  "version": "1.0.0",
+  "version": "v1.0",
   "license": "joking",
   "authors": [
     {
