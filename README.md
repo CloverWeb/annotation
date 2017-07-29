@@ -15,16 +15,12 @@
             $this->param = $param;
         }
     }
-    
--------
 
 >然后开始注册
 
---------
-
     Annotation::register("标签的名字 Container" , "标签的实体类 Label::class");
     
---------
+
 
     /**
      * @Container('className' , param="lalala")
@@ -32,7 +28,7 @@
      class Name {
         
      }
------
+
 >然后你可以这样读读取它
 
     $reflectionClass = new ReflectionClass(Name::class);
