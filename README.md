@@ -18,7 +18,7 @@
 
 >然后开始注册
 
-    Annotation::register("标签的名字 Container" , "标签的实体类 Label::class");
+    Annotation::register("标签的名字 Container" , "标签的实体类 ContainerLabel::class");
     
 
 
