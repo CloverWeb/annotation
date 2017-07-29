@@ -1,0 +1,21 @@
+{
+  "name": "joking/annotation",
+  "description": "注释拓展",
+  "minimum-stability": "stable",
+  "version": "1.0.0",
+  "license": "joking",
+  "authors": [
+    {
+      "name": "joking",
+      "email": "370546391@qq.com"
+    }
+  ],
+  "autoload": {
+    "psr-4": {
+      "Joking\\Annotation\\": "src/"
+    }
+  },
+  "require": {
+    "php": ">=5.6"
+  }
+}
