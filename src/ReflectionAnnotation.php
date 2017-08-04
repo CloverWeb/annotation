@@ -19,10 +19,9 @@ abstract class ReflectionAnnotation {
             return [];
         }
 
-
         $target = [];
         for ($i = 0; $i < count($lines[1]); $i++) {
-            $target[$lines[1][$i]] = $lines[2][$i];
+            $target[$lines[1][$i]][] = $lines[2][$i];
         }
 
         return $this->parseParams($target);
@@ -57,43 +56,46 @@ abstract class ReflectionAnnotation {
         $flags = PREG_SPLIT_NO_EMPTY | PREG_SPLIT_DELIM_CAPTURE | PREG_SPLIT_OFFSET_CAPTURE;
 
         $result = [];
-        foreach ($target as $name => $value) {
-            if (empty($value)) {
-                $result[$name] = [];
-                continue;
-            }
-
-            $matches = preg_split($regex, $value, -1, $flags);
-
-            $array = [];
-            $string = '';
-            $openh = true;
-            $opens = true;
-            foreach ($matches as $match) {
-
-                $match[0] == '{' && $openh = false;
-                $match[0] == '}' && $openh = true;
-                $match[0] == '[' && $opens = false;
-                $match[0] == ']' && $opens = true;
-
-                if ($match[0] == "," && $openh == true && $opens == true) {
-                    $array[] = $string;
-                    $string = '';
+        foreach ($target as $name => $values) {
+            foreach ($values as $value) {
+                if (empty($value)) {
+                    $result[$name][] = [];
                     continue;
                 }
 
-                $string .= $match[0];
-            }
+                $matches = preg_split($regex, $value, -1, $flags);
 
-            empty($string) || $array[] = $string;
-            $num = 1;
-            for ($i = 0; $i < count($array); $i++) {
-                list($k, $v) = $this->parseParam($array[$i], $num === 1);
-                $result[$name][$k] = $v;
-                $num++;
+                $array = [];
+                $string = '';
+                $openh = true;
+                $opens = true;
+                foreach ($matches as $match) {
+
+                    $match[0] == '{' && $openh = false;
+                    $match[0] == '}' && $openh = true;
+                    $match[0] == '[' && $opens = false;
+                    $match[0] == ']' && $opens = true;
+
+                    if ($match[0] == "," && $openh == true && $opens == true) {
+                        $array[] = $string;
+                        $string = '';
+                        continue;
+                    }
+
+                    $string .= $match[0];
+                }
+
+                empty($string) || $array[] = $string;
+                $num = 1;
+                $labelParameters = [];
+                for ($i = 0; $i < count($array); $i++) {
+                    list($k, $v) = $this->parseParam($array[$i], $num++ === 1);
+                    $labelParameters[$k] = $v;
+                }
+
+                $result[$name][] = $labelParameters;
             }
         }
-
         return $result;
     }
 
@@ -155,10 +157,9 @@ abstract class ReflectionAnnotation {
             } else if ($parameter->isDefaultValueAvailable()) {
                 $parameters[] = $parameter->getDefaultValue();
                 continue;
+            } else {
+                throw new \Exception('缺少参数：' . $parameter->getName());
             }
-
-
-            throw new \Exception('缺少参数：' . $parameter->getName());
         }
 
         return count($parameters) > 0 ? $reflectionClass->newInstanceArgs($parameters) : $reflectionClass->newInstance();

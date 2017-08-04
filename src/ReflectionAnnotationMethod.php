@@ -18,13 +18,33 @@ class ReflectionAnnotationMethod extends ReflectionAnnotation {
     }
 
     public function getAnnotation($name) {
-        return $this->hasAnnotation($name) ? $this->createEntity($name, $this->methodAnnotations[$name]) : null;
+        return $this->hasAnnotation($name) ? $this->createEntity($name, $this->methodAnnotations[$name][0]) : null;
     }
 
-    public function getAnnotations() {
+    /**
+     * 获取多个 @ 注释标签
+     * @param $name
+     * @return array
+     */
+    public function getAnnotations($name) {
         $annotations = [];
-        foreach ($this->methodAnnotations as $name => $annotation) {
-            $annotations[$name] = $this->getAnnotation($name);
+        if ($this->hasAnnotation($name)) {
+            foreach ($this->methodAnnotations[$name] as $annotation) {
+                $annotations[] = $this->createEntity($name, $annotation);
+            }
+        }
+        return $annotations;
+    }
+
+    /**
+     * @return array
+     */
+    public function getAll() {
+        $annotations = [];
+        foreach ($this->methodAnnotations as $name => $values) {
+            foreach ($values as $annotation) {
+                $annotations[$name][] = $this->createEntity($name, $annotation);
+            }
         }
         return $annotations;
     }

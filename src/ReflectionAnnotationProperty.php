@@ -26,19 +26,31 @@ class ReflectionAnnotationProperty extends ReflectionAnnotation {
      * @return object
      */
     public function getAnnotation($name) {
-        return $this->hasAnnotation($name) ? $this->createEntity($name, $this->propertyAnnotations[$name]) : null;
+        return $this->hasAnnotation($name) ? $this->createEntity($name, $this->propertyAnnotations[$name][0]) : null;
     }
 
     /**
-     * 获取所有 @ 注释标签
+     * 获取多个 @ 注释标签
+     * @param $name
      * @return array
      */
-    public function getAnnotations() {
+    public function getAnnotations($name) {
         $annotations = [];
-        foreach ($this->propertyAnnotations as $name => $annotation) {
-            $annotations[$name] = $this->getAnnotation($name);
+        if ($this->hasAnnotation($name)) {
+            foreach ($this->propertyAnnotations[$name] as $annotation) {
+                $annotations[] = $this->createEntity($name, $annotation);
+            }
         }
+        return $annotations;
+    }
 
+    public function getAll() {
+        $annotations = [];
+        foreach ($this->propertyAnnotations as $name => $values) {
+            foreach ($values as $annotation) {
+                $annotations[$name][] = $this->createEntity($name, $annotation);
+            }
+        }
         return $annotations;
     }
 
